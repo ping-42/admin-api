@@ -1,0 +1,6 @@
+# OSX Resource Forks
+admin-api
+.DS_Store
+.vscode/
+vendor/
+dist/
