@@ -1,4 +1,4 @@
-module admin-api
+module github.com/ping-42/admin-api
 
 go 1.22.0
 

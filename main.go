@@ -1,9 +1,9 @@
 package main
 
 import (
-	"admin-api/data"
-	"admin-api/handlers"
-	"admin-api/middleware"
+	"github.com/ping-42/admin-api/data"
+	"github.com/ping-42/admin-api/handlers"
+	"github.com/ping-42/admin-api/middleware"
 
 	"github.com/iris-contrib/middleware/cors"
 	"github.com/kataras/iris/v12"

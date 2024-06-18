@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	"admin-api/middleware"
 	"github.com/kataras/iris/v12"
+	"github.com/ping-42/admin-api/middleware"
 )
 
 type LoginRequest struct {
