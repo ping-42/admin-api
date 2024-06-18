@@ -14,7 +14,7 @@ func LoginHandler(ctx iris.Context) {
 	var req LoginRequest
 	if err := ctx.ReadJSON(&req); err != nil {
 		ctx.StatusCode(iris.StatusBadRequest)
-		ctx.JSON(iris.Map{"error": "Invalid request"})
+		_ = ctx.JSON(iris.Map{"error": "Invalid request"})
 		return
 	}
 
@@ -23,12 +23,12 @@ func LoginHandler(ctx iris.Context) {
 		token, err := middleware.GenerateJWT(req.Username)
 		if err != nil {
 			ctx.StatusCode(iris.StatusInternalServerError)
-			ctx.JSON(iris.Map{"error": "Failed to generate token"})
+			_ = ctx.JSON(iris.Map{"error": "Failed to generate token"})
 			return
 		}
-		ctx.JSON(iris.Map{"token": token})
+		_ = ctx.JSON(iris.Map{"token": token})
 	} else {
 		ctx.StatusCode(iris.StatusUnauthorized)
-		ctx.JSON(iris.Map{"error": "Invalid credentials"})
+		_ = ctx.JSON(iris.Map{"error": "Invalid credentials"})
 	}
 }

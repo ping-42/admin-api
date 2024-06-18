@@ -1,6 +1,8 @@
 package main
 
 import (
+	"github.com/containerd/log"
+	"github.com/ping-42/42lib/logger"
 	"github.com/ping-42/admin-api/data"
 	"github.com/ping-42/admin-api/handlers"
 	"github.com/ping-42/admin-api/middleware"
@@ -8,6 +10,23 @@ import (
 	"github.com/iris-contrib/middleware/cors"
 	"github.com/kataras/iris/v12"
 )
+
+// Release versioning magic
+var (
+	version = "dev"
+	commit  = "none"
+	date    = "unknown"
+)
+
+var serverLogger = logger.Base("admin-api")
+
+func init() {
+	serverLogger.WithFields(log.Fields{
+		"version":   version,
+		"commit":    commit,
+		"buildDate": date,
+	}).Info("Starting PING42 Admin API Service...")
+}
 
 func main() {
 	app := iris.New()
@@ -30,14 +49,14 @@ func main() {
 	api := app.Party("/api", middleware.JWTMiddleware)
 	{
 		api.Get("/items", middleware.PermissionMiddleware("read_item"), func(ctx iris.Context) {
-			ctx.JSON(data.Items)
+			_ = ctx.JSON(data.Items)
 		})
 		api.Post("/items/update", middleware.PermissionMiddleware("write_item"), func(ctx iris.Context) {
 			// Logic to add a new item
-			ctx.JSON(iris.Map{"message": "Item added"})
+			_ = ctx.JSON(iris.Map{"message": "Item added"})
 		})
 	}
 
 	// Start the server
-	app.Listen(":8081")
+	_ = app.Listen(":8081")
 }

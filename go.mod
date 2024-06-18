@@ -3,9 +3,11 @@ module github.com/ping-42/admin-api
 go 1.22.0
 
 require (
+	github.com/containerd/log v0.1.0
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/iris-contrib/middleware/cors v0.0.0-20240502084239-34f27409ce72
 	github.com/kataras/iris/v12 v12.2.11
+	github.com/ping-42/42lib v0.1.16
 )
 
 require (

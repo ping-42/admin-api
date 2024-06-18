@@ -1,9 +1,10 @@
 package middleware
 
 import (
+	"time"
+
 	"github.com/dgrijalva/jwt-go"
 	"github.com/kataras/iris/v12"
-	"time"
 )
 
 var mySigningKey = []byte("secret")
@@ -32,7 +33,7 @@ func JWTMiddleware(ctx iris.Context) {
 	tokenString := ctx.GetHeader("Authorization")
 	if tokenString == "" {
 		ctx.StatusCode(iris.StatusUnauthorized)
-		ctx.JSON(iris.Map{"error": "Missing token"})
+		_ = ctx.JSON(iris.Map{"error": "Missing token"})
 		return
 	}
 
@@ -50,11 +51,11 @@ func JWTMiddleware(ctx iris.Context) {
 			ctx.Next()
 		} else {
 			ctx.StatusCode(iris.StatusUnauthorized)
-			ctx.JSON(iris.Map{"error": "Invalid user"})
+			_ = ctx.JSON(iris.Map{"error": "Invalid user"})
 		}
 	} else {
 		ctx.StatusCode(iris.StatusUnauthorized)
-		ctx.JSON(iris.Map{"error": err.Error()})
+		_ = ctx.JSON(iris.Map{"error": err.Error()})
 	}
 }
 
@@ -71,7 +72,7 @@ func PermissionMiddleware(requiredPermissions ...string) iris.Handler {
 			}
 			if !hasPermission {
 				ctx.StatusCode(iris.StatusForbidden)
-				ctx.JSON(iris.Map{"error": "You do not have permission to access this resource"})
+				_ = ctx.JSON(iris.Map{"error": "You do not have permission to access this resource"})
 				return
 			}
 		}
