@@ -7,7 +7,7 @@ require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/iris-contrib/middleware/cors v0.0.0-20240502084239-34f27409ce72
 	github.com/kataras/iris/v12 v12.2.11
-	github.com/ping-42/42lib v0.1.16
+	github.com/ping-42/42lib v0.1.17
 )
 
 require (
