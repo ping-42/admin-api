@@ -21,6 +21,16 @@ var (
 	date    = "unknown"
 )
 
+var serverLogger = logger.Base("admin-api")
+
+func init() {
+	serverLogger.WithFields(log.Fields{
+		"version":   version,
+		"commit":    commit,
+		"buildDate": date,
+	}).Info("Starting PING42 Admin API Service...")
+}
+
 func main() {
 
 	var serverLogger = logger.Base("server")
@@ -67,5 +77,5 @@ func main() {
 	setupRoutes(app, gormClient, redisClient)
 
 	// Start the server
-	app.Listen(":8081")
+	_ = app.Listen(":8081")
 }

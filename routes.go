@@ -1,14 +1,17 @@
 package main
 
 import (
-	"admin-api/middleware"
 
-	"admin-api/handlers/admins"
-	"admin-api/handlers/auth"
-	"admin-api/handlers/users"
+	// "admin-api/handlers/admins"
+	// "admin-api/handlers/auth"
+	// "admin-api/handlers/users"
 
 	"github.com/go-redis/redis"
 	"github.com/kataras/iris/v12"
+	"github.com/ping-42/admin-api/handlers/admins"
+	"github.com/ping-42/admin-api/handlers/auth"
+	"github.com/ping-42/admin-api/handlers/users"
+	"github.com/ping-42/admin-api/middleware"
 	"gorm.io/gorm"
 )
 

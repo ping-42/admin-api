@@ -1,8 +1,6 @@
 package users
 
 import (
-	"admin-api/middleware"
-	"admin-api/utils"
 	"fmt"
 	"strings"
 
@@ -11,6 +9,8 @@ import (
 	"github.com/kataras/iris/v12"
 	"github.com/ping-42/42lib/constants"
 	"github.com/ping-42/42lib/db/models"
+	"github.com/ping-42/admin-api/middleware"
+	"github.com/ping-42/admin-api/utils"
 	"gorm.io/gorm"
 )
 

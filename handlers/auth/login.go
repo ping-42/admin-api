@@ -7,12 +7,11 @@ import (
 	"log"
 	"strings"
 
-	"admin-api/middleware"
-
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/google/uuid"
 	"github.com/kataras/iris/v12"
 	"github.com/ping-42/42lib/db/models"
+	"github.com/ping-42/admin-api/middleware"
 	"gorm.io/gorm"
 )
 

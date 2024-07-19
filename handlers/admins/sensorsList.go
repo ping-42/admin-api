@@ -1,7 +1,6 @@
 package admins
 
 import (
-	"admin-api/utils"
 	"slices"
 	"strings"
 
@@ -11,6 +10,7 @@ import (
 	"github.com/ping-42/42lib/constants"
 	"github.com/ping-42/42lib/db/models"
 	"github.com/ping-42/42lib/sensor"
+	"github.com/ping-42/admin-api/utils"
 	"gorm.io/gorm"
 )
 

@@ -5,11 +5,10 @@ import (
 	"fmt"
 	"net/http"
 
-	"admin-api/utils"
-
 	"github.com/google/uuid"
 	"github.com/kataras/iris/v12"
 	"github.com/ping-42/42lib/db/models"
+	"github.com/ping-42/admin-api/utils"
 	"gorm.io/gorm"
 )
 

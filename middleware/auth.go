@@ -199,7 +199,6 @@
 package middleware
 
 import (
-	"admin-api/utils"
 	"fmt"
 	"os"
 	"time"
@@ -208,6 +207,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/kataras/iris/v12"
 	"github.com/ping-42/42lib/db/models"
+	"github.com/ping-42/admin-api/utils"
 	"gorm.io/gorm"
 )
 
@@ -265,7 +265,7 @@ func ValidateJWTMiddleware(ctx iris.Context) {
 	tokenString := ctx.GetHeader("Authorization")
 	if tokenString == "" {
 		ctx.StatusCode(iris.StatusUnauthorized)
-		ctx.JSON(iris.Map{"error": "Missing token"})
+		_ = ctx.JSON(iris.Map{"error": "Missing token"})
 		return
 	}
 

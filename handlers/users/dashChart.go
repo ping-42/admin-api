@@ -1,13 +1,14 @@
 package users
 
 import (
-	"admin-api/middleware"
-	"admin-api/utils"
 	"fmt"
 	"time"
 
 	"github.com/google/uuid"
 	"github.com/kataras/iris/v12"
+	"github.com/ping-42/admin-api/middleware"
+	"github.com/ping-42/admin-api/utils"
+
 	"gorm.io/gorm"
 )
 
