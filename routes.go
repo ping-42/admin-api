@@ -1,11 +1,6 @@
 package main
 
 import (
-
-	// "admin-api/handlers/admins"
-	// "admin-api/handlers/auth"
-	// "admin-api/handlers/users"
-
 	"github.com/go-redis/redis"
 	"github.com/kataras/iris/v12"
 	"github.com/ping-42/admin-api/handlers/admins"
@@ -28,14 +23,12 @@ func setupRoutes(app *iris.Application, db *gorm.DB, redisClient *redis.Client) 
 	// Admin routes
 	apiRoutesAdmin := app.Party("/api/admin", middleware.ValidateJWTMiddleware, middleware.ValidateAdminMiddleware)
 	{
-		// Sensors
 		apiRoutesAdmin.Get("/sensors/list", middleware.PermissionMiddleware("read"), func(ctx iris.Context) {
 			admins.ServeSensorsList(ctx, db, redisClient)
 		})
 		apiRoutesAdmin.Post("/sensors/create", middleware.PermissionMiddleware("create"), func(ctx iris.Context) {
 			admins.ServeSensorsCreate(ctx, db)
 		})
-		// Users
 		apiRoutesAdmin.Get("/users/list", middleware.PermissionMiddleware("read"), func(ctx iris.Context) {
 			admins.ServeUsersList(ctx, db)
 		})
@@ -46,14 +39,12 @@ func setupRoutes(app *iris.Application, db *gorm.DB, redisClient *redis.Client) 
 	{
 		// NOTE: If needed we can create more concreate permissions e.g. read_dash, sensors_create
 
-		// Dash
 		apiRoutes.Get("/dash-widgets-data", middleware.PermissionMiddleware("read"), func(ctx iris.Context) {
 			users.ServeDashWidgetData(ctx, db, redisClient)
 		})
 		apiRoutes.Get("/dash-chart-data", middleware.PermissionMiddleware("read"), func(ctx iris.Context) {
 			users.ServeDashChartData(ctx, db)
 		})
-		// Sensors
 		apiRoutes.Get("/sensors/list", middleware.PermissionMiddleware("read"), func(ctx iris.Context) {
 			users.ServeSensorsList(ctx, db, redisClient)
 		})

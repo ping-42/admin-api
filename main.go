@@ -1,11 +1,11 @@
 package main
 
 import (
-	// "admin-api/handlers"
-
+	"fmt"
 	"os"
 
 	"github.com/iris-contrib/middleware/cors"
+	"github.com/jessevdk/go-flags"
 	"github.com/kataras/iris/v12"
 	irisLogger "github.com/kataras/iris/v12/middleware/logger"
 	"github.com/ping-42/42lib/config"
@@ -23,6 +23,11 @@ var (
 
 var serverLogger = logger.Base("admin-api")
 
+// command-line options
+type Options struct {
+	Port int `short:"p" long:"port" description:"Port to listen on" default:"8081"`
+}
+
 func init() {
 	serverLogger.WithFields(log.Fields{
 		"version":   version,
@@ -32,6 +37,12 @@ func init() {
 }
 
 func main() {
+
+	var opts Options
+	_, err := flags.Parse(&opts)
+	if err != nil {
+		os.Exit(1)
+	}
 
 	var serverLogger = logger.Base("server")
 	serverLogger.WithFields(log.Fields{
@@ -76,6 +87,6 @@ func main() {
 	// Setup routes
 	setupRoutes(app, gormClient, redisClient)
 
-	// Start the server
-	_ = app.Listen(":8081")
+	// Start the server with the port from the flag
+	_ = app.Listen(fmt.Sprintf(":%d", opts.Port))
 }
