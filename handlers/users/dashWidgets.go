@@ -103,7 +103,6 @@ ORDER BY
 	}
 
 	utils.RespondSuccess(ctx, serveData)
-	return
 }
 
 // Function to generate the last 12 months

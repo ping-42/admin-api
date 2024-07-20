@@ -28,7 +28,7 @@ func ServeSensorsList(ctx iris.Context, db *gorm.DB, redisClient *redis.Client) 
 	userClaims, ok := ctx.Values().Get("UserClaims").(*middleware.UserClaims)
 	if !ok {
 		ctx.StatusCode(iris.StatusUnauthorized)
-		ctx.JSON(iris.Map{"error": "unauthorized user"})
+		_ = ctx.JSON(iris.Map{"error": "unauthorized user"})
 		return
 	}
 
@@ -54,7 +54,7 @@ func ServeSensorsList(ctx iris.Context, db *gorm.DB, redisClient *redis.Client) 
 	var sensors []models.Sensor
 	if err := db.Select("id", "user_id", "name", "location", "secret").Where("user_id = ?", userClaims.UserId).Find(&sensors).Error; err != nil {
 		ctx.StatusCode(iris.StatusInternalServerError)
-		ctx.JSON(iris.Map{"error": "Failed to retrieve sensors"})
+		_ = ctx.JSON(iris.Map{"error": "Failed to retrieve sensors"})
 		return
 	}
 
@@ -68,7 +68,7 @@ func ServeSensorsList(ctx iris.Context, db *gorm.DB, redisClient *redis.Client) 
 		envToken, err := sensorCreds.GetSensorEnvToken()
 		if err != nil {
 			ctx.StatusCode(iris.StatusInternalServerError)
-			ctx.JSON(iris.Map{"error": "Failed to retrieve sensors"})
+			_ = ctx.JSON(iris.Map{"error": "Failed to retrieve sensors"})
 			return
 		}
 
@@ -84,5 +84,5 @@ func ServeSensorsList(ctx iris.Context, db *gorm.DB, redisClient *redis.Client) 
 		})
 	}
 
-	ctx.JSON(sensorResponses)
+	_ = ctx.JSON(sensorResponses)
 }

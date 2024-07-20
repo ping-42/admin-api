@@ -84,7 +84,7 @@ func ValidateJWTMiddleware(ctx iris.Context) {
 
 	if err != nil {
 		ctx.StatusCode(iris.StatusUnauthorized)
-		ctx.JSON(iris.Map{"error": fmt.Sprintf("error parsing token: %v", err)})
+		_ = ctx.JSON(iris.Map{"error": fmt.Sprintf("error parsing token: %v", err)})
 		return
 	}
 
@@ -93,7 +93,7 @@ func ValidateJWTMiddleware(ctx iris.Context) {
 		ctx.Next()
 	} else {
 		ctx.StatusCode(iris.StatusUnauthorized)
-		ctx.JSON(iris.Map{"error": "invalid token"})
+		_ = ctx.JSON(iris.Map{"error": "invalid token"})
 	}
 }
 
@@ -108,7 +108,7 @@ func ValidateAdminMiddleware(ctx iris.Context) {
 	// Check if the user is Admin (UserGroupId == 1)
 	if userClaims.UserGroupId != 1 {
 		ctx.StatusCode(iris.StatusUnauthorized)
-		ctx.JSON(iris.Map{"error": "not admin"})
+		_ = ctx.JSON(iris.Map{"error": "not admin"})
 		return
 	}
 
@@ -121,14 +121,14 @@ func PermissionMiddleware(requiredPermissions ...string) iris.Handler {
 		userClaims, ok := ctx.Values().Get("UserClaims").(*UserClaims)
 		if !ok {
 			ctx.StatusCode(iris.StatusUnauthorized)
-			ctx.JSON(iris.Map{"error": "unauthorized user"})
+			_ = ctx.JSON(iris.Map{"error": "unauthorized user"})
 			return
 		}
 
 		for _, perm := range requiredPermissions {
 			if !hasPermission(userClaims.Permissions, perm) {
 				ctx.StatusCode(iris.StatusForbidden)
-				ctx.JSON(iris.Map{"error": "you do not have permission to access this resource"})
+				_ = ctx.JSON(iris.Map{"error": "you do not have permission to access this resource"})
 				return
 			}
 		}

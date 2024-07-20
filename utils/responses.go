@@ -29,7 +29,10 @@ func RespondSuccess(ctx iris.Context, data interface{}) {
 	}
 
 	ctx.StatusCode(http.StatusOK)
-	ctx.JSON(response)
+	err := ctx.JSON(response)
+	if err != nil {
+		fmt.Println(err) // TODO
+	}
 }
 
 // RespondCreated sends a resource created response
@@ -40,7 +43,10 @@ func RespondCreated(ctx iris.Context, data interface{}, clientMsg string) {
 		Message: clientMsg,
 	}
 	ctx.StatusCode(http.StatusCreated)
-	ctx.JSON(response)
+	err := ctx.JSON(response)
+	if err != nil {
+		fmt.Println(err) // TODO
+	}
 }
 
 // RespondError sends an error response
@@ -53,5 +59,8 @@ func RespondError(ctx iris.Context, statusCode int, clientMsg string, logError e
 	fmt.Printf("Response error:%v, %v, %v\n", ctx.Request().RequestURI, clientMsg, logError.Error()) //TODO use logger
 
 	ctx.StatusCode(statusCode)
-	ctx.JSON(response)
+	err := ctx.JSON(response)
+	if err != nil {
+		fmt.Println(err) // TODO
+	}
 }

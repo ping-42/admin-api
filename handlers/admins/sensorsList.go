@@ -55,7 +55,7 @@ func ServeSensorsList(ctx iris.Context, db *gorm.DB, redisClient *redis.Client) 
 
 	if err := query.Find(&sensors).Error; err != nil {
 		ctx.StatusCode(iris.StatusInternalServerError)
-		ctx.JSON(iris.Map{"error": "Failed to retrieve sensors"})
+		_ = ctx.JSON(iris.Map{"error": "Failed to retrieve sensors"})
 		return
 	}
 
@@ -69,7 +69,7 @@ func ServeSensorsList(ctx iris.Context, db *gorm.DB, redisClient *redis.Client) 
 		envToken, err := sensorCreds.GetSensorEnvToken()
 		if err != nil {
 			ctx.StatusCode(iris.StatusInternalServerError)
-			ctx.JSON(iris.Map{"error": "Failed to retrieve sensors"})
+			_ = ctx.JSON(iris.Map{"error": "Failed to retrieve sensors"})
 			return
 		}
 
@@ -85,5 +85,5 @@ func ServeSensorsList(ctx iris.Context, db *gorm.DB, redisClient *redis.Client) 
 		})
 	}
 
-	ctx.JSON(sensorResponses)
+	_ = ctx.JSON(sensorResponses)
 }

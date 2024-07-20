@@ -28,19 +28,19 @@ func LoginHandler(ctx iris.Context, db *gorm.DB) {
 	var req LoginRequest
 	if err := ctx.ReadJSON(&req); err != nil {
 		ctx.StatusCode(iris.StatusBadRequest)
-		ctx.JSON(iris.Map{"error": "Invalid request"})
+		_ = ctx.JSON(iris.Map{"error": "Invalid request"})
 		return
 	}
 
 	if req.Signature == "" || req.EthAddress == "" || req.Nonce == "" {
 		ctx.StatusCode(iris.StatusBadRequest)
-		ctx.JSON(iris.Map{"error": "Invalid request"})
+		_ = ctx.JSON(iris.Map{"error": "Invalid request"})
 		return
 	}
 
 	if !nonceManager.verifyNonce(req.EthAddress, req.Nonce) {
 		ctx.StatusCode(iris.StatusUnauthorized)
-		ctx.JSON(iris.Map{"error": "Invalid nonce"})
+		_ = ctx.JSON(iris.Map{"error": "Invalid nonce"})
 		return
 	}
 
@@ -51,29 +51,26 @@ func LoginHandler(ctx iris.Context, db *gorm.DB) {
 		user, err := getOrCreateUser(db, req.EthAddress)
 		if err != nil {
 			ctx.StatusCode(iris.StatusInternalServerError)
-			ctx.JSON(iris.Map{"error": "Failed to generate user"})
+			_ = ctx.JSON(iris.Map{"error": "Failed to generate user"})
 			return
 		}
 
 		token, err := middleware.GenerateJWT(db, user)
 		if err != nil {
 			ctx.StatusCode(iris.StatusInternalServerError)
-			ctx.JSON(iris.Map{"error": "Failed to generate token"})
+			_ = ctx.JSON(iris.Map{"error": "Failed to generate token"})
 			return
 		}
-		ctx.JSON(iris.Map{"token": token})
+		_ = ctx.JSON(iris.Map{"token": token})
 	} else {
 		ctx.StatusCode(iris.StatusUnauthorized)
-		ctx.JSON(iris.Map{"error": "Invalid signature"})
+		_ = ctx.JSON(iris.Map{"error": "Invalid signature"})
 	}
 }
 
 func verifySignature(message, signature, address string) bool {
 	prefixedMessage := fmt.Sprintf("\x19Ethereum Signed Message:\n%d%s", len(message), message)
 	hash := crypto.Keccak256Hash([]byte(prefixedMessage))
-
-	// log.Printf("Prefixed Message: %s\n", prefixedMessage)
-	// log.Printf("Hash: %s\n", hash.Hex())
 
 	sig, err := hex.DecodeString(signature[2:]) // Remove "0x" prefix before decoding
 	if err != nil {
@@ -97,11 +94,9 @@ func verifySignature(message, signature, address string) bool {
 	}
 
 	recoveredAddress := crypto.PubkeyToAddress(*pubKey).Hex()
-	// log.Printf("Recovered Address: %s\n", recoveredAddress)
-	// log.Printf("Provided Address: %s\n", address)
 
 	// Normalize addresses to lowercase for case-insensitive comparison
-	return strings.ToLower(recoveredAddress) == strings.ToLower(address)
+	return strings.EqualFold(recoveredAddress, address)
 }
 
 // Check if the user exists in the database

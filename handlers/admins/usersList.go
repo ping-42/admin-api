@@ -17,7 +17,7 @@ func ServeUsersList(ctx iris.Context, db *gorm.DB) {
 	var users []models.User
 	if err := db.Find(&users).Error; err != nil {
 		ctx.StatusCode(iris.StatusInternalServerError)
-		ctx.JSON(iris.Map{"error": "Failed to retrieve users"})
+		_ = ctx.JSON(iris.Map{"error": "Failed to retrieve users"})
 		return
 	}
 
@@ -29,5 +29,5 @@ func ServeUsersList(ctx iris.Context, db *gorm.DB) {
 		})
 	}
 
-	ctx.JSON(usersResponse)
+	_ = ctx.JSON(usersResponse)
 }

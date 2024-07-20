@@ -88,5 +88,11 @@ func main() {
 	setupRoutes(app, gormClient, redisClient)
 
 	// Start the server with the port from the flag
-	_ = app.Listen(fmt.Sprintf(":%d", opts.Port))
+	err = app.Listen(fmt.Sprintf(":%d", opts.Port))
+	if err != nil {
+		serverLogger.WithFields(log.Fields{
+			"error": err.Error(),
+		}).Error("app.Listen error")
+		os.Exit(4)
+	}
 }

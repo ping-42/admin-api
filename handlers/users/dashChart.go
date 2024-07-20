@@ -52,5 +52,4 @@ func ServeDashChartData(ctx iris.Context, db *gorm.DB) {
 	}
 
 	utils.RespondSuccess(ctx, results)
-	return
 }

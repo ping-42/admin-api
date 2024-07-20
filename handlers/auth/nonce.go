@@ -31,13 +31,13 @@ func NonceHandler(ctx iris.Context, db *gorm.DB) {
 
 	if err := ctx.ReadJSON(&req); err != nil {
 		ctx.StatusCode(iris.StatusBadRequest)
-		ctx.JSON(iris.Map{"error": "Invalid request"})
+		_ = ctx.JSON(iris.Map{"error": "Invalid request"})
 		return
 	}
 
 	if req.EthAddress == "" {
 		ctx.StatusCode(iris.StatusBadRequest)
-		ctx.JSON(iris.Map{"error": "Invalid request"})
+		_ = ctx.JSON(iris.Map{"error": "Invalid request"})
 		return
 	}
 
@@ -45,10 +45,10 @@ func NonceHandler(ctx iris.Context, db *gorm.DB) {
 	if err != nil {
 		fmt.Printf("generateNonce err:%v\n", err.Error())
 		ctx.StatusCode(iris.StatusInternalServerError)
-		ctx.JSON(iris.Map{"error": "Server error"})
+		_ = ctx.JSON(iris.Map{"error": "Server error"})
 		return
 	}
-	ctx.JSON(iris.Map{"nonce": nonce})
+	_ = ctx.JSON(iris.Map{"nonce": nonce})
 }
 
 func (nm *NonceManager) generateNonce(account string) (string, error) {
