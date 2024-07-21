@@ -46,6 +46,7 @@ func ServeSensorsCreate(ctx iris.Context, db *gorm.DB) {
 		Name:     sensorReceived.Name,
 		Location: sensorReceived.Location,
 		Secret:   uuid.New().String(),
+		IsActive: true,
 	}
 	if err := db.Create(&newSensor).Error; err != nil {
 		utils.RespondError(ctx, http.StatusInternalServerError, "Invalid request", err)

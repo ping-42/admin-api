@@ -61,7 +61,7 @@ func LoginHandler(ctx iris.Context, db *gorm.DB) {
 			_ = ctx.JSON(iris.Map{"error": "Failed to generate token"})
 			return
 		}
-		_ = ctx.JSON(iris.Map{"token": token})
+		_ = ctx.JSON(iris.Map{"token": token, "userGroupID": user.UserGroupID})
 	} else {
 		ctx.StatusCode(iris.StatusUnauthorized)
 		_ = ctx.JSON(iris.Map{"error": "Invalid signature"})
