@@ -1,4 +1,4 @@
-package admins
+package roots
 
 import (
 	"github.com/google/uuid"
@@ -7,27 +7,27 @@ import (
 	"gorm.io/gorm"
 )
 
-type userResponse struct {
-	ID            uuid.UUID `json:"id"`
-	WalletAddress string    `json:"user_id"`
+type orgResponse struct {
+	ID               uuid.UUID `json:"id"`
+	OrganisationName string    `json:"organisation_name"`
 }
 
 func ServeUsersList(ctx iris.Context, db *gorm.DB) {
 
-	var users []models.User
+	var users []models.Organisation
 	if err := db.Find(&users).Error; err != nil {
 		ctx.StatusCode(iris.StatusInternalServerError)
 		_ = ctx.JSON(iris.Map{"error": "Failed to retrieve users"})
 		return
 	}
 
-	var usersResponse []userResponse
+	var orgsResponse []orgResponse
 	for _, s := range users {
-		usersResponse = append(usersResponse, userResponse{
-			ID:            s.ID,
-			WalletAddress: s.WalletAddress,
+		orgsResponse = append(orgsResponse, orgResponse{
+			ID:               s.ID,
+			OrganisationName: s.Name,
 		})
 	}
 
-	_ = ctx.JSON(usersResponse)
+	_ = ctx.JSON(orgsResponse)
 }

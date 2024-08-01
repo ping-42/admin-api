@@ -78,13 +78,13 @@ func verifySignature(message, signature, address string) bool {
 		return false
 	}
 
-	// Ensure the signature length is correct
+	// ensure the signature length is correct
 	if len(sig) != 65 {
 		log.Printf("Invalid signature length: %d\n", len(sig))
 		return false
 	}
 
-	// Adjust the recovery id (last byte)
+	// adjust the recovery id (last byte)
 	sig[64] -= 27
 
 	pubKey, err := crypto.SigToPub(hash.Bytes(), sig)
@@ -95,7 +95,7 @@ func verifySignature(message, signature, address string) bool {
 
 	recoveredAddress := crypto.PubkeyToAddress(*pubKey).Hex()
 
-	// Normalize addresses to lowercase for case-insensitive comparison
+	// normalize addresses to lowercase for case-insensitive comparison
 	return strings.EqualFold(recoveredAddress, address)
 }
 
@@ -104,11 +104,21 @@ func verifySignature(message, signature, address string) bool {
 func getOrCreateUser(db *gorm.DB, ethAddress string) (user models.User, err error) {
 	result := db.Where("wallet_address = ?", ethAddress).First(&user)
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-		// User not found, create a new user
+		// user not found, create new organisation & new admin user
+		newOrg := models.Organisation{
+			ID:   uuid.New(),
+			Name: "",
+		}
+		if err = db.Create(&newOrg).Error; err != nil {
+			err = fmt.Errorf("creating new org err:%v", err)
+			return
+		}
+		//
 		newUser := models.User{
-			ID:            uuid.New(),
-			WalletAddress: ethAddress,
-			UserGroupID:   2, // User
+			ID:             uuid.New(),
+			WalletAddress:  ethAddress,
+			UserGroupID:    2, // Admin
+			OrganisationID: newOrg.ID,
 		}
 		if err = db.Create(&newUser).Error; err != nil {
 			err = fmt.Errorf("creating new user err:%v", err)

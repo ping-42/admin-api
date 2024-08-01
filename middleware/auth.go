@@ -15,9 +15,10 @@ import (
 
 // UserClaims represents the authenticated user and their permissions.
 type UserClaims struct {
-	UserId      uuid.UUID `json:"user_id"`
-	Permissions []string  `json:"permissions"`
-	UserGroupId uint64    `json:"user_group_id"`
+	UserId         uuid.UUID `json:"user_id"`
+	OrganisationId uuid.UUID `json:"organisation_id"`
+	Permissions    []string  `json:"permissions"`
+	UserGroupId    uint64    `json:"user_group_id"`
 	jwt.RegisteredClaims
 }
 
@@ -46,9 +47,10 @@ func GenerateJWT(db *gorm.DB, user models.User) (string, error) {
 	}
 
 	userClaims := UserClaims{
-		UserId:      user.ID,
-		Permissions: permissions,
-		UserGroupId: user.UserGroupID,
+		UserId:         user.ID,
+		OrganisationId: user.OrganisationID,
+		Permissions:    permissions,
+		UserGroupId:    user.UserGroupID,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 1)),
 		},
@@ -105,10 +107,10 @@ func ValidateAdminMiddleware(ctx iris.Context) {
 		return
 	}
 
-	// Check if the user is Admin (UserGroupId == 1)
+	// check if the user is Root (UserGroupId == 1)
 	if userClaims.UserGroupId != 1 {
 		ctx.StatusCode(iris.StatusUnauthorized)
-		_ = ctx.JSON(iris.Map{"error": "not admin"})
+		_ = ctx.JSON(iris.Map{"error": "not root"})
 		return
 	}
 

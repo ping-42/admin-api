@@ -16,12 +16,12 @@ import (
 )
 
 type sensorResponse struct {
-	ID          uuid.UUID `json:"id"`
-	UserID      uuid.UUID `json:"user_id"`
-	Name        string    `json:"name"`
-	Location    string    `json:"location"`
-	EnvToken    string    `json:"env_token"`
-	IsConnected bool      `json:"is_connected"`
+	ID             uuid.UUID `json:"id"`
+	OrganisationID uuid.UUID `json:"organisation_id"`
+	Name           string    `json:"name"`
+	Location       string    `json:"location"`
+	EnvToken       string    `json:"env_token"`
+	IsConnected    bool      `json:"is_connected"`
 }
 
 func ServeSensorsList(ctx iris.Context, db *gorm.DB, redisClient *redis.Client) {
@@ -52,7 +52,7 @@ func ServeSensorsList(ctx iris.Context, db *gorm.DB, redisClient *redis.Client) 
 	//-----------------------
 
 	var sensors []models.Sensor
-	if err := db.Select("id", "user_id", "name", "location", "secret").Where("user_id = ?", userClaims.UserId).Find(&sensors).Error; err != nil {
+	if err := db.Select("id", "organisation_id", "name", "location", "secret").Where("organisation_id = ?", userClaims.OrganisationId).Find(&sensors).Error; err != nil {
 		ctx.StatusCode(iris.StatusInternalServerError)
 		_ = ctx.JSON(iris.Map{"error": "Failed to retrieve sensors"})
 		return
@@ -75,12 +75,12 @@ func ServeSensorsList(ctx iris.Context, db *gorm.DB, redisClient *redis.Client) 
 		isConnected := slices.Contains(connectedSensorIDs, s.ID)
 
 		sensorResponses = append(sensorResponses, sensorResponse{
-			ID:          s.ID,
-			UserID:      s.UserID,
-			Name:        s.Name,
-			Location:    s.Location,
-			EnvToken:    envToken,
-			IsConnected: isConnected,
+			ID:             s.ID,
+			OrganisationID: s.OrganisationID,
+			Name:           s.Name,
+			Location:       s.Location,
+			EnvToken:       envToken,
+			IsConnected:    isConnected,
 		})
 	}
 

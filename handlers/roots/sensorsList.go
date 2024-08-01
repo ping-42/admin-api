@@ -1,4 +1,4 @@
-package admins
+package roots
 
 import (
 	"slices"
@@ -15,17 +15,17 @@ import (
 )
 
 type sensorResponse struct {
-	ID          uuid.UUID `json:"id"`
-	UserID      uuid.UUID `json:"user_id"`
-	Name        string    `json:"name"`
-	Location    string    `json:"location"`
-	EnvToken    string    `json:"env_token"`
-	IsConnected bool      `json:"is_connected"`
+	ID             uuid.UUID `json:"id"`
+	OrganisationID uuid.UUID `json:"organisation_id"`
+	Name           string    `json:"name"`
+	Location       string    `json:"location"`
+	EnvToken       string    `json:"env_token"`
+	IsConnected    bool      `json:"is_connected"`
 }
 
 func ServeSensorsList(ctx iris.Context, db *gorm.DB, redisClient *redis.Client) {
 
-	receivedUserId := ctx.Request().URL.Query().Get("user_id")
+	receivedOrgId := ctx.Request().URL.Query().Get("organisation_id")
 
 	//-----------------------
 	// TODO: here we are getting the connected/active sensors this needs to be refactored
@@ -47,10 +47,10 @@ func ServeSensorsList(ctx iris.Context, db *gorm.DB, redisClient *redis.Client) 
 	//-----------------------
 
 	var sensors []models.Sensor
-	query := db.Select("id", "user_id", "name", "location", "secret")
+	query := db.Select("id", "organisation_id", "name", "location", "secret")
 
-	if receivedUserId != "" {
-		query = query.Where("user_id = ?", receivedUserId)
+	if receivedOrgId != "" {
+		query = query.Where("organisation_id = ?", receivedOrgId)
 	}
 
 	if err := query.Find(&sensors).Error; err != nil {
@@ -76,12 +76,12 @@ func ServeSensorsList(ctx iris.Context, db *gorm.DB, redisClient *redis.Client) 
 		isConnected := slices.Contains(connectedSensorIDs, s.ID)
 
 		sensorResponses = append(sensorResponses, sensorResponse{
-			ID:          s.ID,
-			UserID:      s.UserID,
-			Name:        s.Name,
-			Location:    s.Location,
-			EnvToken:    envToken,
-			IsConnected: isConnected,
+			ID:             s.ID,
+			OrganisationID: s.OrganisationID,
+			Name:           s.Name,
+			Location:       s.Location,
+			EnvToken:       envToken,
+			IsConnected:    isConnected,
 		})
 	}
 

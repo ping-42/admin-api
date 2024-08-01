@@ -34,7 +34,7 @@ func ServeDashWidgetData(ctx iris.Context, db *gorm.DB, redisClient *redis.Clien
 
 	// get the count of enabled sensors
 	var enabledSensors int64
-	if err := db.Model(&models.Sensor{}).Where("user_id = ? AND is_active = ?", userClaims.UserId, true).Count(&enabledSensors).Error; err != nil {
+	if err := db.Model(&models.Sensor{}).Where("organisation_id = ? AND is_active = ?", userClaims.OrganisationId, true).Count(&enabledSensors).Error; err != nil {
 		utils.RespondError(ctx, iris.StatusInternalServerError, "", err)
 		return
 	}
@@ -56,16 +56,16 @@ func ServeDashWidgetData(ctx iris.Context, db *gorm.DB, redisClient *redis.Clien
 		}
 		connectedSensorIDs = append(connectedSensorIDs, sensorID)
 	}
-	// Fetch sensors from the database
+	// fetch sensors from the database
 	var sensors []models.Sensor
-	if err := db.Where("id IN ? AND user_id=?", connectedSensorIDs, userClaims.UserId).Find(&sensors).Error; err != nil {
+	if err := db.Where("id IN ? AND organisation_id=?", connectedSensorIDs, userClaims.OrganisationId).Find(&sensors).Error; err != nil {
 		utils.RespondError(ctx, iris.StatusInternalServerError, "", err)
 		return
 	}
 	activeSensorsCount := len(sensors)
 	//-----------------------
 
-	// Query to get the count of tasks completed per month for the last 12 months for the specific user
+	// query to get the count of tasks completed per month for the last 12 months for the specific user
 	var tasksCompleted []countPerMonth
 	var query = `
         WITH RECURSIVE last_12_months AS (
@@ -84,7 +84,7 @@ LEFT JOIN
     tasks t ON date_trunc('month', t.created_at) = last_12_months.month
 LEFT JOIN 
     sensors s ON s.id = t.sensor_id
-    AND s.user_id = ?
+    AND s.organisation_id = ?
 GROUP BY 
     last_12_months.month
 ORDER BY 
@@ -104,26 +104,3 @@ ORDER BY
 
 	utils.RespondSuccess(ctx, serveData)
 }
-
-// Function to generate the last 12 months
-// func getLast12Months() []string {
-// 	var months []string
-// 	for i := 11; i >= 0; i-- {
-// 		month := time.Now().AddDate(0, -i, 0).Format("January")
-// 		months = append(months, month)
-// 	}
-// 	return months
-// }
-
-//
-// tasksCompletedData := []int{1, 18, 9, 17, 34, 22, 11, 15, 20, 25, 30, 35}
-// "tasksCompletedData": tasksCompletedData,
-// "tasksCompleted": 75,
-//
-// Prepare the response data
-// var months []string
-// var activeSensorsData []int
-// for _, result := range results {
-// 	months = append(months, result.Month)
-// 	activeSensorsData = append(activeSensorsData, result.Count)
-// }

@@ -76,4 +76,4 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-// replace github.com/ping-42/42lib => ../42lib
+replace github.com/ping-42/42lib => ../42lib

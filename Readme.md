@@ -39,14 +39,8 @@ cd /workspaces/server
 go run . migrate
 ```
 
-* Once the UI and the API are running, the only thing required to be able to log in is the Metamask plugin installed. When you click on `Login With Metamask`, a new user with your wallet will be created (if you are logging in for the first time). To have admin permissions, you will need to update your permission group manually in the database: 
+* Once the UI and the API are running, the only thing required to be able to log in is the Metamask plugin installed. When you click on `Login With Metamask`, a new user and orgnisation with your wallet will be created (if you are logging in for the first time). To have root permissions, you will need to update your permission group manually in the database: 
 
 `UPDATE users SET user_group_id=1 WHERE wallet_address='0xd694cfc8c66e34371eae8ebe03d54867e5c6cec4'` 
 
 Note: use your address
-
-* If you alredy have running sensors you will have to update the fkey of each sensor to be assigned to your user.
-
-`UPDATE sensors SET user_id='63e76fbd-77cf-4470-bcb0-25c72b09a504' WHERE id = 'b9dc3d20-256b-4ac7-8cae-2f6dc962e183'`  
-
-Note: use your user id and sensor id. In case this is in dev env you can remove the where clouse if you want to asign all sensors to your user.

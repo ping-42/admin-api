@@ -1,4 +1,4 @@
-package admins
+package roots
 
 import (
 	"errors"
@@ -14,9 +14,9 @@ import (
 
 // Sensor represents the structure of a sensor
 type SensorReceived struct {
-	Name     string    `json:"name"`
-	Location string    `json:"location"`
-	UserId   uuid.UUID `json:"userId"`
+	Name           string    `json:"name"`
+	Location       string    `json:"location"`
+	OrganisationId uuid.UUID `json:"organisationId"`
 }
 
 func ServeSensorsCreate(ctx iris.Context, db *gorm.DB) {
@@ -35,12 +35,12 @@ func ServeSensorsCreate(ctx iris.Context, db *gorm.DB) {
 	}
 
 	newSensor := models.Sensor{
-		ID:       uuid.New(),
-		UserID:   sensorReceived.UserId,
-		Name:     sensorReceived.Name,
-		Location: sensorReceived.Location,
-		Secret:   uuid.New().String(),
-		IsActive: true,
+		ID:             uuid.New(),
+		OrganisationID: sensorReceived.OrganisationId,
+		Name:           sensorReceived.Name,
+		Location:       sensorReceived.Location,
+		Secret:         uuid.New().String(),
+		IsActive:       true,
 	}
 	if err := db.Create(&newSensor).Error; err != nil {
 		utils.RespondError(ctx, http.StatusInternalServerError, "Invalid request", err)
@@ -53,6 +53,9 @@ func ServeSensorsCreate(ctx iris.Context, db *gorm.DB) {
 
 // validateSensor validates the sensor data
 func validateSensor(sensor SensorReceived) error {
+	if sensor.OrganisationId == uuid.Nil {
+		return errors.New("Sensor organisation is required")
+	}
 	if sensor.Name == "" {
 		return errors.New("Sensor name is required")
 	}
