@@ -7,7 +7,7 @@ require (
 	github.com/iris-contrib/middleware/cors v0.0.0-20240502084239-34f27409ce72
 	github.com/jessevdk/go-flags v1.6.1
 	github.com/kataras/iris/v12 v12.2.11
-	github.com/ping-42/42lib v0.1.18
+	github.com/ping-42/42lib v0.1.19
 	gorm.io/gorm v1.25.11
 )
 
@@ -75,5 +75,3 @@ require (
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
-
-replace github.com/ping-42/42lib => ../42lib

@@ -42,7 +42,7 @@ func ServeSensorsCreate(ctx iris.Context, db *gorm.DB) {
 
 	newSensor := models.Sensor{
 		ID:             uuid.New(),
-		OrganisationID: userClaims.OrganisationId,
+		OrganizationID: userClaims.OrganizationId,
 		Name:           sensorReceived.Name,
 		Location:       sensorReceived.Location,
 		Secret:         uuid.New().String(),

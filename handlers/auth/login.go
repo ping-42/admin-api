@@ -104,8 +104,8 @@ func verifySignature(message, signature, address string) bool {
 func getOrCreateUser(db *gorm.DB, ethAddress string) (user models.User, err error) {
 	result := db.Where("wallet_address = ?", ethAddress).First(&user)
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-		// user not found, create new organisation & new admin user
-		newOrg := models.Organisation{
+		// user not found, create new organization & new admin user
+		newOrg := models.Organization{
 			ID:   uuid.New(),
 			Name: "",
 		}
@@ -118,7 +118,7 @@ func getOrCreateUser(db *gorm.DB, ethAddress string) (user models.User, err erro
 			ID:             uuid.New(),
 			WalletAddress:  ethAddress,
 			UserGroupID:    2, // Admin
-			OrganisationID: newOrg.ID,
+			OrganizationID: newOrg.ID,
 		}
 		if err = db.Create(&newUser).Error; err != nil {
 			err = fmt.Errorf("creating new user err:%v", err)

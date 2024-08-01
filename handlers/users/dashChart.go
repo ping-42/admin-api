@@ -38,14 +38,14 @@ func ServeDashChartData(ctx iris.Context, db *gorm.DB) {
 		LEFT JOIN tasks ON tasks.created_at::date = dates.date
 		AND tasks.task_status_id = ?
 		LEFT JOIN sensors ON sensors.id = tasks.sensor_id
-		AND sensors.organisation_id = ?
+		AND sensors.organization_id = ?
 		GROUP BY dates.date, tasks.sensor_id
 		ORDER BY dates.date, tasks.sensor_id
 	`
 
 	// Execute the raw SQL query
 	var results []res
-	err := db.Raw(sqlQuery, thirtyDaysAgo, time.Now(), uuid.Nil, 8, userClaims.OrganisationId).Scan(&results).Error
+	err := db.Raw(sqlQuery, thirtyDaysAgo, time.Now(), uuid.Nil, 8, userClaims.OrganizationId).Scan(&results).Error
 	if err != nil {
 		utils.RespondError(ctx, iris.StatusInternalServerError, "Failed to query task counts", err)
 		return

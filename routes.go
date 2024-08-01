@@ -29,7 +29,7 @@ func setupRoutes(app *iris.Application, db *gorm.DB, redisClient *redis.Client) 
 		apiRoutesAdmin.Post("/sensors/create", middleware.PermissionMiddleware("create"), func(ctx iris.Context) {
 			roots.ServeSensorsCreate(ctx, db)
 		})
-		apiRoutesAdmin.Get("/organisations/list", middleware.PermissionMiddleware("read"), func(ctx iris.Context) {
+		apiRoutesAdmin.Get("/organizations/list", middleware.PermissionMiddleware("read"), func(ctx iris.Context) {
 			roots.ServeUsersList(ctx, db)
 		})
 	}

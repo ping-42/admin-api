@@ -17,7 +17,7 @@ import (
 
 type sensorResponse struct {
 	ID             uuid.UUID `json:"id"`
-	OrganisationID uuid.UUID `json:"organisation_id"`
+	OrganizationID uuid.UUID `json:"organization_id"`
 	Name           string    `json:"name"`
 	Location       string    `json:"location"`
 	EnvToken       string    `json:"env_token"`
@@ -52,7 +52,7 @@ func ServeSensorsList(ctx iris.Context, db *gorm.DB, redisClient *redis.Client) 
 	//-----------------------
 
 	var sensors []models.Sensor
-	if err := db.Select("id", "organisation_id", "name", "location", "secret").Where("organisation_id = ?", userClaims.OrganisationId).Find(&sensors).Error; err != nil {
+	if err := db.Select("id", "organization_id", "name", "location", "secret").Where("organization_id = ?", userClaims.OrganizationId).Find(&sensors).Error; err != nil {
 		ctx.StatusCode(iris.StatusInternalServerError)
 		_ = ctx.JSON(iris.Map{"error": "Failed to retrieve sensors"})
 		return
@@ -76,7 +76,7 @@ func ServeSensorsList(ctx iris.Context, db *gorm.DB, redisClient *redis.Client) 
 
 		sensorResponses = append(sensorResponses, sensorResponse{
 			ID:             s.ID,
-			OrganisationID: s.OrganisationID,
+			OrganizationID: s.OrganizationID,
 			Name:           s.Name,
 			Location:       s.Location,
 			EnvToken:       envToken,

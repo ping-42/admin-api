@@ -9,12 +9,12 @@ import (
 
 type orgResponse struct {
 	ID               uuid.UUID `json:"id"`
-	OrganisationName string    `json:"organisation_name"`
+	OrganizationName string    `json:"organization_name"`
 }
 
 func ServeUsersList(ctx iris.Context, db *gorm.DB) {
 
-	var users []models.Organisation
+	var users []models.Organization
 	if err := db.Find(&users).Error; err != nil {
 		ctx.StatusCode(iris.StatusInternalServerError)
 		_ = ctx.JSON(iris.Map{"error": "Failed to retrieve users"})
@@ -25,7 +25,7 @@ func ServeUsersList(ctx iris.Context, db *gorm.DB) {
 	for _, s := range users {
 		orgsResponse = append(orgsResponse, orgResponse{
 			ID:               s.ID,
-			OrganisationName: s.Name,
+			OrganizationName: s.Name,
 		})
 	}
 

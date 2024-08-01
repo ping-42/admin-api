@@ -16,7 +16,7 @@ import (
 type SensorReceived struct {
 	Name           string    `json:"name"`
 	Location       string    `json:"location"`
-	OrganisationId uuid.UUID `json:"organisationId"`
+	OrganizationId uuid.UUID `json:"organizationId"`
 }
 
 func ServeSensorsCreate(ctx iris.Context, db *gorm.DB) {
@@ -36,7 +36,7 @@ func ServeSensorsCreate(ctx iris.Context, db *gorm.DB) {
 
 	newSensor := models.Sensor{
 		ID:             uuid.New(),
-		OrganisationID: sensorReceived.OrganisationId,
+		OrganizationID: sensorReceived.OrganizationId,
 		Name:           sensorReceived.Name,
 		Location:       sensorReceived.Location,
 		Secret:         uuid.New().String(),
@@ -53,8 +53,8 @@ func ServeSensorsCreate(ctx iris.Context, db *gorm.DB) {
 
 // validateSensor validates the sensor data
 func validateSensor(sensor SensorReceived) error {
-	if sensor.OrganisationId == uuid.Nil {
-		return errors.New("Sensor organisation is required")
+	if sensor.OrganizationId == uuid.Nil {
+		return errors.New("Sensor organization is required")
 	}
 	if sensor.Name == "" {
 		return errors.New("Sensor name is required")

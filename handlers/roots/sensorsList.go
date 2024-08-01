@@ -16,7 +16,7 @@ import (
 
 type sensorResponse struct {
 	ID             uuid.UUID `json:"id"`
-	OrganisationID uuid.UUID `json:"organisation_id"`
+	OrganizationID uuid.UUID `json:"organization_id"`
 	Name           string    `json:"name"`
 	Location       string    `json:"location"`
 	EnvToken       string    `json:"env_token"`
@@ -25,7 +25,7 @@ type sensorResponse struct {
 
 func ServeSensorsList(ctx iris.Context, db *gorm.DB, redisClient *redis.Client) {
 
-	receivedOrgId := ctx.Request().URL.Query().Get("organisation_id")
+	receivedOrgId := ctx.Request().URL.Query().Get("organization_id")
 
 	//-----------------------
 	// TODO: here we are getting the connected/active sensors this needs to be refactored
@@ -47,10 +47,10 @@ func ServeSensorsList(ctx iris.Context, db *gorm.DB, redisClient *redis.Client) 
 	//-----------------------
 
 	var sensors []models.Sensor
-	query := db.Select("id", "organisation_id", "name", "location", "secret")
+	query := db.Select("id", "organization_id", "name", "location", "secret")
 
 	if receivedOrgId != "" {
-		query = query.Where("organisation_id = ?", receivedOrgId)
+		query = query.Where("organization_id = ?", receivedOrgId)
 	}
 
 	if err := query.Find(&sensors).Error; err != nil {
@@ -77,7 +77,7 @@ func ServeSensorsList(ctx iris.Context, db *gorm.DB, redisClient *redis.Client) 
 
 		sensorResponses = append(sensorResponses, sensorResponse{
 			ID:             s.ID,
-			OrganisationID: s.OrganisationID,
+			OrganizationID: s.OrganizationID,
 			Name:           s.Name,
 			Location:       s.Location,
 			EnvToken:       envToken,

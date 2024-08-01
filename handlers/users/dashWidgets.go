@@ -34,7 +34,7 @@ func ServeDashWidgetData(ctx iris.Context, db *gorm.DB, redisClient *redis.Clien
 
 	// get the count of enabled sensors
 	var enabledSensors int64
-	if err := db.Model(&models.Sensor{}).Where("organisation_id = ? AND is_active = ?", userClaims.OrganisationId, true).Count(&enabledSensors).Error; err != nil {
+	if err := db.Model(&models.Sensor{}).Where("organization_id = ? AND is_active = ?", userClaims.OrganizationId, true).Count(&enabledSensors).Error; err != nil {
 		utils.RespondError(ctx, iris.StatusInternalServerError, "", err)
 		return
 	}
@@ -58,7 +58,7 @@ func ServeDashWidgetData(ctx iris.Context, db *gorm.DB, redisClient *redis.Clien
 	}
 	// fetch sensors from the database
 	var sensors []models.Sensor
-	if err := db.Where("id IN ? AND organisation_id=?", connectedSensorIDs, userClaims.OrganisationId).Find(&sensors).Error; err != nil {
+	if err := db.Where("id IN ? AND organization_id=?", connectedSensorIDs, userClaims.OrganizationId).Find(&sensors).Error; err != nil {
 		utils.RespondError(ctx, iris.StatusInternalServerError, "", err)
 		return
 	}
@@ -84,7 +84,7 @@ LEFT JOIN
     tasks t ON date_trunc('month', t.created_at) = last_12_months.month
 LEFT JOIN 
     sensors s ON s.id = t.sensor_id
-    AND s.organisation_id = ?
+    AND s.organization_id = ?
 GROUP BY 
     last_12_months.month
 ORDER BY 

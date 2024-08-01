@@ -16,7 +16,7 @@ import (
 // UserClaims represents the authenticated user and their permissions.
 type UserClaims struct {
 	UserId         uuid.UUID `json:"user_id"`
-	OrganisationId uuid.UUID `json:"organisation_id"`
+	OrganizationId uuid.UUID `json:"organization_id"`
 	Permissions    []string  `json:"permissions"`
 	UserGroupId    uint64    `json:"user_group_id"`
 	jwt.RegisteredClaims
@@ -48,7 +48,7 @@ func GenerateJWT(db *gorm.DB, user models.User) (string, error) {
 
 	userClaims := UserClaims{
 		UserId:         user.ID,
-		OrganisationId: user.OrganisationID,
+		OrganizationId: user.OrganizationID,
 		Permissions:    permissions,
 		UserGroupId:    user.UserGroupID,
 		RegisteredClaims: jwt.RegisteredClaims{
