@@ -22,10 +22,11 @@ builds:
   id: "admin-api"
   binary: "admin-api"
 
+# Note: this should be true only on public repos
 # proxies from the go mod proxy before building
 # https://goreleaser.com/customization/gomod
 gomod:
-  proxy: true
+  proxy: false
 
 # config the checksum filename
 # https://goreleaser.com/customization/checksum
@@ -59,3 +60,4 @@ dockers:
     - "--label=org.opencontainers.image.revision={{.FullCommit}}"
     - "--label=org.opencontainers.image.version={{.Version}}"
     - "--label=org.opencontainers.image.source={{.GitURL}}"
+    - "--label=org.opencontainers.image.description=PING42 Admin API for Apps"
