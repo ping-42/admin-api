@@ -5,7 +5,6 @@ version: 2
 # https://goreleaser.com/customization/build
 builds:
 - env:
-  - CGO_ENABLED=0
   goos:
   - linux
   goarch:
