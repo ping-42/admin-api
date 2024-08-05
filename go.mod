@@ -9,7 +9,7 @@ require (
 	github.com/iris-contrib/middleware/cors v0.0.0-20240502084239-34f27409ce72
 	github.com/jessevdk/go-flags v1.6.1
 	github.com/kataras/iris/v12 v12.2.11
-	github.com/ping-42/42lib v0.1.20
+	github.com/ping-42/42lib v0.1.21
 	gorm.io/gorm v1.25.11
 )
 
