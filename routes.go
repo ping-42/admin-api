@@ -20,6 +20,11 @@ func setupRoutes(app *iris.Application, db *gorm.DB, redisClient *redis.Client) 
 		auth.LoginHandler(ctx, db)
 	})
 
+	// google Login Route
+	app.Post("/login/google", func(ctx iris.Context) {
+		auth.GoogleLoginHandler(ctx, db)
+	})
+
 	// root routes
 	apiRoutesAdmin := app.Party("/api/root", middleware.ValidateJWTMiddleware, middleware.ValidateAdminMiddleware)
 	{

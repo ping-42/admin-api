@@ -48,7 +48,7 @@ func LoginHandler(ctx iris.Context, db *gorm.DB) {
 
 	if verifySignature(message, req.Signature, req.EthAddress) {
 		// if the user do not exists will cerate new one automatically
-		user, err := getOrCreateUser(db, req.EthAddress)
+		user, err := getOrCreateUser(db, req.EthAddress, "")
 		if err != nil {
 			ctx.StatusCode(iris.StatusInternalServerError)
 			_ = ctx.JSON(iris.Map{"error": "Failed to generate user"})
@@ -99,10 +99,24 @@ func verifySignature(message, signature, address string) bool {
 	return strings.EqualFold(recoveredAddress, address)
 }
 
-// Check if the user exists in the database
-// if no create new one
-func getOrCreateUser(db *gorm.DB, ethAddress string) (user models.User, err error) {
-	result := db.Where("wallet_address = ?", ethAddress).First(&user)
+// check if the user exists in the database, if no create new one
+func getOrCreateUser(db *gorm.DB, ethAddress string, email string) (user models.User, err error) {
+
+	if (ethAddress != "" && email != "") || (ethAddress == "" && email == "") {
+		err = fmt.Errorf("not supported case expected email or eth address")
+		return
+	}
+
+	var result *gorm.DB
+	if ethAddress != "" {
+		result = db.Where("wallet_address = ?", ethAddress).First(&user)
+	} else if email != "" {
+		result = db.Where("email = ?", email).First(&user)
+	} else {
+		err = fmt.Errorf("not expected getOrCreateUser data")
+		return
+	}
+
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		// user not found, create new organization & new admin user
 		newOrg := models.Organization{
@@ -117,6 +131,7 @@ func getOrCreateUser(db *gorm.DB, ethAddress string) (user models.User, err erro
 		newUser := models.User{
 			ID:             uuid.New(),
 			WalletAddress:  ethAddress,
+			Email:          email,
 			UserGroupID:    2, // Admin
 			OrganizationID: newOrg.ID,
 		}
@@ -130,5 +145,6 @@ func getOrCreateUser(db *gorm.DB, ethAddress string) (user models.User, err erro
 	} else {
 		fmt.Printf("user:%+v initiating login\n", user.ID)
 	}
+
 	return
 }
