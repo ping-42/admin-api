@@ -27,7 +27,6 @@ func GenerateJWT(db *gorm.DB, user models.User) (string, error) {
 
 	jwtSecret := getJwtSecret()
 
-	// Get the permissions
 	var lvPermissions []models.LvPermission
 	err := db.Table("users").
 		Select("lv_permissions.permission").

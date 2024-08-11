@@ -16,7 +16,7 @@ import (
 )
 
 // The same msg needs to be sign with the private key via Metamsk
-const MsgToSign = "Authenticate with Ping42 app: "
+const MsgToSign = "Authenticate with Ping42 app:"
 
 type LoginRequest struct {
 	EthAddress string `json:"ethAddress"`
@@ -24,7 +24,7 @@ type LoginRequest struct {
 	Nonce      string `json:"nonce"`
 }
 
-func LoginHandler(ctx iris.Context, db *gorm.DB) {
+func MetamaskLoginHandler(ctx iris.Context, db *gorm.DB) {
 	var req LoginRequest
 	if err := ctx.ReadJSON(&req); err != nil {
 		ctx.StatusCode(iris.StatusBadRequest)
@@ -48,10 +48,11 @@ func LoginHandler(ctx iris.Context, db *gorm.DB) {
 
 	if verifySignature(message, req.Signature, req.EthAddress) {
 		// if the user do not exists will cerate new one automatically
-		user, err := getOrCreateUser(db, req.EthAddress, "")
+		user, err := getOrCreateMetamaskUser(db, req.EthAddress)
 		if err != nil {
 			ctx.StatusCode(iris.StatusInternalServerError)
 			_ = ctx.JSON(iris.Map{"error": "Failed to generate user"})
+			fmt.Println(err) // TODO logger
 			return
 		}
 
@@ -69,6 +70,7 @@ func LoginHandler(ctx iris.Context, db *gorm.DB) {
 }
 
 func verifySignature(message, signature, address string) bool {
+
 	prefixedMessage := fmt.Sprintf("\x19Ethereum Signed Message:\n%d%s", len(message), message)
 	hash := crypto.Keccak256Hash([]byte(prefixedMessage))
 
@@ -100,22 +102,15 @@ func verifySignature(message, signature, address string) bool {
 }
 
 // check if the user exists in the database, if no create new one
-func getOrCreateUser(db *gorm.DB, ethAddress string, email string) (user models.User, err error) {
+func getOrCreateMetamaskUser(db *gorm.DB, ethAddress string) (user models.User, err error) {
 
-	if (ethAddress != "" && email != "") || (ethAddress == "" && email == "") {
-		err = fmt.Errorf("not supported case expected email or eth address")
+	if ethAddress == "" {
+		err = fmt.Errorf("not supported case expected eth address")
 		return
 	}
 
 	var result *gorm.DB
-	if ethAddress != "" {
-		result = db.Where("wallet_address = ?", ethAddress).First(&user)
-	} else if email != "" {
-		result = db.Where("email = ?", email).First(&user)
-	} else {
-		err = fmt.Errorf("not expected getOrCreateUser data")
-		return
-	}
+	result = db.Where("wallet_address = ?", ethAddress).First(&user)
 
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		// user not found, create new organization & new admin user
@@ -131,19 +126,18 @@ func getOrCreateUser(db *gorm.DB, ethAddress string, email string) (user models.
 		newUser := models.User{
 			ID:             uuid.New(),
 			WalletAddress:  ethAddress,
-			Email:          email,
 			UserGroupID:    2, // Admin
 			OrganizationID: newOrg.ID,
 		}
 		if err = db.Create(&newUser).Error; err != nil {
-			err = fmt.Errorf("creating new user err:%v", err)
+			err = fmt.Errorf("creating new metamask user err:%v", err)
 			return
 		}
 		user = newUser
 
-		fmt.Printf("new user created:%+v\n", newUser)
+		fmt.Printf("new user metamask created:%+v\n", newUser)
 	} else {
-		fmt.Printf("user:%+v initiating login\n", user.ID)
+		fmt.Printf("user:%+v initiating metamask login\n", user.ID)
 	}
 
 	return

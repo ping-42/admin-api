@@ -84,7 +84,7 @@ LEFT JOIN
     tasks t ON date_trunc('month', t.created_at) = last_12_months.month
 LEFT JOIN 
     sensors s ON s.id = t.sensor_id
-    AND s.organization_id = ?
+WHERE s.organization_id = ?
 GROUP BY 
     last_12_months.month
 ORDER BY 

@@ -13,14 +13,12 @@ import (
 // setupRoutes initializes all the routes and handlers
 func setupRoutes(app *iris.Application, db *gorm.DB, redisClient *redis.Client) {
 	// public routes
-	app.Post("/login/nonce", func(ctx iris.Context) {
-		auth.NonceHandler(ctx, db)
+	app.Post("/login/metamask/nonce", func(ctx iris.Context) {
+		auth.MetamaskNonceHandler(ctx, db)
 	})
-	app.Post("/login/init", func(ctx iris.Context) {
-		auth.LoginHandler(ctx, db)
+	app.Post("/login/metamask/init", func(ctx iris.Context) {
+		auth.MetamaskLoginHandler(ctx, db)
 	})
-
-	// google Login Route
 	app.Post("/login/google", func(ctx iris.Context) {
 		auth.GoogleLoginHandler(ctx, db)
 	})
