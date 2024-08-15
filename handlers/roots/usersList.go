@@ -12,7 +12,7 @@ type orgResponse struct {
 	OrganizationName string    `json:"organization_name"`
 }
 
-func ServeUsersList(ctx iris.Context, db *gorm.DB) {
+func ServeOrganizationsList(ctx iris.Context, db *gorm.DB) {
 
 	var users []models.Organization
 	if err := db.Find(&users).Error; err != nil {

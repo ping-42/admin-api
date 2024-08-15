@@ -29,7 +29,7 @@ func GoogleLoginHandler(ctx iris.Context, db *gorm.DB) {
 		return
 	}
 
-	// TODO mv to config export GOOGLE_CLIENT_ID=537878940617-g59al68c6s467ov8utt1jkcompevgriu.apps.googleusercontent.com
+	// TODO mv to config
 	googleClientID := os.Getenv("GOOGLE_CLIENT_ID")
 	if googleClientID == "" {
 		ctx.StatusCode(http.StatusInternalServerError)
@@ -101,9 +101,13 @@ func getOrCreateGoogleUser(db *gorm.DB, email string) (user models.User, err err
 
 		newUser := models.User{
 			ID:             uuid.New(),
-			Email:          email,
+			Email:          &email,
 			UserGroupID:    2, // Admin
 			OrganizationID: newOrg.ID,
+			CreatedAt:      time.Now(),
+			IsValidated:    true,
+			IsActive:       true,
+			LastLoginAt:    time.Now(),
 		}
 		if err = db.Create(&newUser).Error; err != nil {
 			err = fmt.Errorf("error creating new user: %v", err)
@@ -116,6 +120,11 @@ func getOrCreateGoogleUser(db *gorm.DB, email string) (user models.User, err err
 		err = fmt.Errorf("error finding user: %v", result.Error)
 		return
 	} else {
+		updateTx := db.Model(&models.User{}).Where("id = ?", user.ID).Update("last_login_at", time.Now())
+		if updateTx.Error != nil {
+			fmt.Println("Error updating user last_login_at", updateTx.Error) //TODO logger
+			return
+		}
 		log.Printf("User found: %+v initiating email login\n", user.ID)
 	}
 

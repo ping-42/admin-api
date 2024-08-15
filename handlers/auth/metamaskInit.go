@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	"time"
 
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/google/uuid"
@@ -125,9 +126,13 @@ func getOrCreateMetamaskUser(db *gorm.DB, ethAddress string) (user models.User, 
 		//
 		newUser := models.User{
 			ID:             uuid.New(),
-			WalletAddress:  ethAddress,
+			WalletAddress:  &ethAddress,
 			UserGroupID:    2, // Admin
 			OrganizationID: newOrg.ID,
+			CreatedAt:      time.Now(),
+			IsValidated:    true,
+			IsActive:       true,
+			LastLoginAt:    time.Now(),
 		}
 		if err = db.Create(&newUser).Error; err != nil {
 			err = fmt.Errorf("creating new metamask user err:%v", err)
@@ -137,6 +142,11 @@ func getOrCreateMetamaskUser(db *gorm.DB, ethAddress string) (user models.User, 
 
 		fmt.Printf("new user metamask created:%+v\n", newUser)
 	} else {
+		updateTx := db.Model(&models.User{}).Where("id = ?", user.ID).Update("last_login_at", time.Now())
+		if updateTx.Error != nil {
+			fmt.Println("Error updating user last_login_at", updateTx.Error) //TODO logger
+			return
+		}
 		fmt.Printf("user:%+v initiating metamask login\n", user.ID)
 	}
 
