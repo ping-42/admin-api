@@ -57,7 +57,7 @@ func GoogleLoginHandler(ctx iris.Context, db *gorm.DB) {
 	if !ok || time.Now().Unix() > int64(exp) {
 		log.Printf("Token is expired or exp claim not found")
 		ctx.StatusCode(http.StatusUnauthorized)
-		ctx.JSON(iris.Map{"error": "Expired Google token"})
+		_ = ctx.JSON(iris.Map{"error": "Expired Google token"})
 		return
 	}
 
@@ -65,7 +65,7 @@ func GoogleLoginHandler(ctx iris.Context, db *gorm.DB) {
 	if err != nil {
 		log.Printf("Failed to get or create user: %v", err)
 		ctx.StatusCode(iris.StatusInternalServerError)
-		ctx.JSON(iris.Map{"error": "Failed to generate user"})
+		_ = ctx.JSON(iris.Map{"error": "Failed to generate user"})
 		return
 	}
 
@@ -73,11 +73,11 @@ func GoogleLoginHandler(ctx iris.Context, db *gorm.DB) {
 	if err != nil {
 		log.Printf("Failed to generate JWT: %v", err)
 		ctx.StatusCode(iris.StatusInternalServerError)
-		ctx.JSON(iris.Map{"error": "Failed to generate token"})
+		_ = ctx.JSON(iris.Map{"error": "Failed to generate token"})
 		return
 	}
 
-	ctx.JSON(iris.Map{"token": jwt, "email": user.Email, "userGroupID": user.UserGroupID})
+	_ = ctx.JSON(iris.Map{"token": jwt, "email": user.Email, "userGroupID": user.UserGroupID})
 }
 
 // getOrCreateGoogleUser checks if the user exists in the database, if not creates a new one.
