@@ -110,8 +110,7 @@ func getOrCreateMetamaskUser(db *gorm.DB, ethAddress string) (user models.User, 
 		return
 	}
 
-	var result *gorm.DB
-	result = db.Where("wallet_address = ?", ethAddress).First(&user)
+	result := db.Where("wallet_address = ?", ethAddress).First(&user)
 
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		// user not found, create new organization & new admin user

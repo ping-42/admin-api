@@ -25,7 +25,7 @@ func GoogleLoginHandler(ctx iris.Context, db *gorm.DB) {
 
 	if err := ctx.ReadJSON(&body); err != nil {
 		ctx.StatusCode(http.StatusBadRequest)
-		ctx.JSON(iris.Map{"error": "Invalid request"})
+		_ = ctx.JSON(iris.Map{"error": "Invalid request"})
 		return
 	}
 
@@ -33,7 +33,7 @@ func GoogleLoginHandler(ctx iris.Context, db *gorm.DB) {
 	googleClientID := os.Getenv("GOOGLE_CLIENT_ID")
 	if googleClientID == "" {
 		ctx.StatusCode(http.StatusInternalServerError)
-		ctx.JSON(iris.Map{"error": "Google client ID not configured"})
+		_ = ctx.JSON(iris.Map{"error": "Google client ID not configured"})
 		return
 	}
 
@@ -41,7 +41,7 @@ func GoogleLoginHandler(ctx iris.Context, db *gorm.DB) {
 	if err != nil {
 		log.Printf("Failed to validate Google token: %v", err)
 		ctx.StatusCode(http.StatusUnauthorized)
-		ctx.JSON(iris.Map{"error": "Invalid Google token"})
+		_ = ctx.JSON(iris.Map{"error": "Invalid Google token"})
 		return
 	}
 
@@ -49,7 +49,7 @@ func GoogleLoginHandler(ctx iris.Context, db *gorm.DB) {
 	if !ok || email == "" {
 		log.Printf("Email not found in Google token payload: %v", payload.Claims)
 		ctx.StatusCode(http.StatusUnauthorized)
-		ctx.JSON(iris.Map{"error": "Invalid Google token"})
+		_ = ctx.JSON(iris.Map{"error": "Invalid Google token"})
 		return
 	}
 
