@@ -24,7 +24,7 @@ func NewNonceManager() *NonceManager {
 
 var nonceManager = NewNonceManager()
 
-func NonceHandler(ctx iris.Context, db *gorm.DB) {
+func MetamaskNonceHandler(ctx iris.Context, db *gorm.DB) {
 	var req struct {
 		EthAddress string `json:"ethAddress"`
 	}

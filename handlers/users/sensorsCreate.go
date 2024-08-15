@@ -28,13 +28,11 @@ func ServeSensorsCreate(ctx iris.Context, db *gorm.DB) {
 		return
 	}
 
-	// Parse the request body
 	if err := ctx.ReadJSON(&sensorReceived); err != nil {
 		utils.RespondError(ctx, http.StatusBadRequest, "Invalid request", err)
 		return
 	}
 
-	// Validate the sensor data
 	if err := validateSensor(sensorReceived); err != nil {
 		utils.RespondError(ctx, http.StatusBadRequest, err.Error(), fmt.Errorf("validateSensor error"))
 		return
@@ -53,7 +51,6 @@ func ServeSensorsCreate(ctx iris.Context, db *gorm.DB) {
 		return
 	}
 
-	// Respond with the created sensor
 	utils.RespondCreated(ctx, newSensor, "Sensor created successfully")
 }
 

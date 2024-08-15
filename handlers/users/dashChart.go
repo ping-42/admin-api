@@ -38,7 +38,7 @@ func ServeDashChartData(ctx iris.Context, db *gorm.DB) {
 		LEFT JOIN tasks ON tasks.created_at::date = dates.date
 		AND tasks.task_status_id = ?
 		LEFT JOIN sensors ON sensors.id = tasks.sensor_id
-		AND sensors.organization_id = ?
+		WHERE sensors.organization_id = ?
 		GROUP BY dates.date, tasks.sensor_id
 		ORDER BY dates.date, tasks.sensor_id
 	`

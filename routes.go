@@ -13,11 +13,14 @@ import (
 // setupRoutes initializes all the routes and handlers
 func setupRoutes(app *iris.Application, db *gorm.DB, redisClient *redis.Client) {
 	// public routes
-	app.Post("/login/nonce", func(ctx iris.Context) {
-		auth.NonceHandler(ctx, db)
+	app.Post("/login/metamask/nonce", func(ctx iris.Context) {
+		auth.MetamaskNonceHandler(ctx, db)
 	})
-	app.Post("/login/init", func(ctx iris.Context) {
-		auth.LoginHandler(ctx, db)
+	app.Post("/login/metamask/init", func(ctx iris.Context) {
+		auth.MetamaskLoginHandler(ctx, db)
+	})
+	app.Post("/login/google", func(ctx iris.Context) {
+		auth.GoogleLoginHandler(ctx, db)
 	})
 
 	// root routes
@@ -30,7 +33,7 @@ func setupRoutes(app *iris.Application, db *gorm.DB, redisClient *redis.Client) 
 			roots.ServeSensorsCreate(ctx, db)
 		})
 		apiRoutesAdmin.Get("/organizations/list", middleware.PermissionMiddleware("read"), func(ctx iris.Context) {
-			roots.ServeUsersList(ctx, db)
+			roots.ServeOrganizationsList(ctx, db)
 		})
 	}
 
@@ -50,6 +53,12 @@ func setupRoutes(app *iris.Application, db *gorm.DB, redisClient *redis.Client) 
 		})
 		apiRoutes.Post("/sensors/create", middleware.PermissionMiddleware("create"), func(ctx iris.Context) {
 			users.ServeSensorsCreate(ctx, db)
+		})
+		apiRoutes.Get("/organization/users/list", middleware.PermissionMiddleware("read"), func(ctx iris.Context) {
+			users.ServeOrganizationUsersList(ctx, db)
+		})
+		apiRoutes.Post("/organization/users/create", middleware.PermissionMiddleware("create_organization_user"), func(ctx iris.Context) {
+			users.ServeOrganizationUsersCreate(ctx, db)
 		})
 	}
 }
