@@ -60,5 +60,8 @@ func setupRoutes(app *iris.Application, db *gorm.DB, redisClient *redis.Client) 
 		apiRoutes.Post("/organization/users/create", middleware.PermissionMiddleware("create_organization_user"), func(ctx iris.Context) {
 			users.ServeOrganizationUsersCreate(ctx, db)
 		})
+		apiRoutes.Get("/organization/user/profile", middleware.PermissionMiddleware("read"), func(ctx iris.Context) {
+			users.ServeOrganizationUserProfile(ctx, db)
+		})
 	}
 }
