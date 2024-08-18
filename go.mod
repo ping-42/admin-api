@@ -10,12 +10,12 @@ require (
 	github.com/jessevdk/go-flags v1.6.1
 	github.com/kataras/iris/v12 v12.2.11
 	github.com/ping-42/42lib v0.1.23
-	google.golang.org/api v0.191.0
+	google.golang.org/api v0.192.0
 	gorm.io/gorm v1.25.11
 )
 
 require (
-	cloud.google.com/go/auth v0.7.3 // indirect
+	cloud.google.com/go/auth v0.8.1 // indirect
 	cloud.google.com/go/auth/oauth2adapt v0.2.3 // indirect
 	cloud.google.com/go/compute/metadata v0.5.0 // indirect
 	github.com/btcsuite/btcd/btcec/v2 v2.3.4 // indirect
