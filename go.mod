@@ -10,13 +10,13 @@ require (
 	github.com/jessevdk/go-flags v1.6.1
 	github.com/kataras/iris/v12 v12.2.11
 	github.com/ping-42/42lib v0.1.23
-	google.golang.org/api v0.192.0
+	google.golang.org/api v0.193.0
 	gorm.io/gorm v1.25.11
 )
 
 require (
-	cloud.google.com/go/auth v0.8.1 // indirect
-	cloud.google.com/go/auth/oauth2adapt v0.2.3 // indirect
+	cloud.google.com/go/auth v0.9.0 // indirect
+	cloud.google.com/go/auth/oauth2adapt v0.2.4 // indirect
 	cloud.google.com/go/compute/metadata v0.5.0 // indirect
 	github.com/btcsuite/btcd/btcec/v2 v2.3.4 // indirect
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.3.0 // indirect
@@ -43,8 +43,8 @@ require (
 	go.opentelemetry.io/otel/trace v1.24.0 // indirect
 	golang.org/x/oauth2 v0.22.0 // indirect
 	golang.org/x/sync v0.8.0 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20240730163845-b1a4ccb954bf // indirect
-	google.golang.org/grpc v1.64.1 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20240814211410-ddb44dafa142 // indirect
+	google.golang.org/grpc v1.65.0 // indirect
 	gorm.io/driver/postgres v1.5.9 // indirect
 )
 
