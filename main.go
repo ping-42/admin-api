@@ -25,15 +25,8 @@ var serverLogger = logger.Base("admin-api")
 
 // command-line options
 type Options struct {
-	Port int `short:"p" long:"port" description:"Port to listen on" default:"8081"`
-}
-
-func init() {
-	serverLogger.WithFields(log.Fields{
-		"version":   version,
-		"commit":    commit,
-		"buildDate": date,
-	}).Info("Starting PING42 Admin API Service...")
+	Port     int    `short:"p" long:"port" description:"Port to listen on" default:"8081"`
+	CorsHost string `short:"c" long:"corshost" description:"CORS Origin host to allow" default:"http://localhost:8081"`
 }
 
 func main() {
@@ -44,7 +37,6 @@ func main() {
 		os.Exit(1)
 	}
 
-	var serverLogger = logger.Base("server")
 	serverLogger.WithFields(log.Fields{
 		"version":   version,
 		"commit":    commit,
@@ -76,7 +68,7 @@ func main() {
 	if config.CurrentEnv() == config.Dev {
 		// CORS options
 		crs := cors.New(cors.Options{
-			AllowedOrigins:   []string{"http://localhost:3000", "https://reimagined-telegram-976gq4jxv69vcx6xv-3000.app.github.dev"},
+			AllowedOrigins:   []string{opts.CorsHost},
 			AllowCredentials: true,
 			AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 			AllowedHeaders:   []string{"Content-Type", "Authorization"},
