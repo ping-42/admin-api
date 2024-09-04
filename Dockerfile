@@ -6,7 +6,7 @@ ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 ENV PATH $PATH:/usr/local/bin:/usr/local/go/bin
-ENV DEBIAN_FRONTEND=noninteractive
+ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get -qqy update \
   && apt-get install -y locales \
