@@ -13,7 +13,6 @@ import (
 	"gorm.io/gorm"
 )
 
-// Sensor represents the structure of a sensor
 type SensorReceived struct {
 	Name     string `json:"name"`
 	Location string `json:"location"`
