@@ -1,8 +1,6 @@
 module github.com/ping-42/admin-api
 
-go 1.22.1
-
-toolchain go1.22.5
+go 1.22.6
 
 require (
 	github.com/go-playground/validator/v10 v10.22.0
@@ -91,7 +89,7 @@ require (
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	github.com/yosssi/ace v0.0.5 // indirect
 	golang.org/x/crypto v0.26.0 // indirect
-	golang.org/x/exp v0.0.0-20240823005443-9b4947da3948 // indirect
+	golang.org/x/exp v0.0.0-20240904232852-e7e105dedf7e // indirect
 	golang.org/x/net v0.28.0 // indirect
 	golang.org/x/sys v0.25.0 // indirect
 	golang.org/x/text v0.18.0 // indirect
