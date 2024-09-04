@@ -63,5 +63,11 @@ func setupRoutes(app *iris.Application, db *gorm.DB, redisClient *redis.Client) 
 		apiRoutes.Get("/organization/user/profile", middleware.PermissionMiddleware("read"), func(ctx iris.Context) {
 			users.ServeOrganizationUserProfile(ctx, db)
 		})
+		apiRoutes.Get("/subscriptions/list", middleware.PermissionMiddleware("read"), func(ctx iris.Context) {
+			users.ServeSubscriptionsList(ctx, db, redisClient)
+		})
+		apiRoutes.Post("/subscriptions/create", middleware.PermissionMiddleware("create"), func(ctx iris.Context) {
+			users.ServeSubscriptionsCreate(ctx, db)
+		})
 	}
 }
