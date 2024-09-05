@@ -24,7 +24,7 @@ type SubscriptionReceived struct {
 }
 
 type DnsOptsReceived struct {
-	Host  string `json:"host" validate:"required,url"`
+	Host  string `json:"host" validate:"required,fqdn"`
 	Proto string `json:"proto" validate:"required"`
 }
 
