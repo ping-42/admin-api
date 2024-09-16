@@ -61,6 +61,9 @@ func GoogleLoginHandler(ctx iris.Context, db *gorm.DB) {
 		return
 	}
 
+	// Extract profile picture from payload (optional)
+	picture, _ := payload.Claims["picture"].(string)
+
 	user, err := getOrCreateGoogleUser(db, email)
 	if err != nil {
 		log.Printf("Failed to get or create user: %v", err)
@@ -77,7 +80,7 @@ func GoogleLoginHandler(ctx iris.Context, db *gorm.DB) {
 		return
 	}
 
-	_ = ctx.JSON(iris.Map{"token": jwt, "email": user.Email, "userGroupID": user.UserGroupID})
+	_ = ctx.JSON(iris.Map{"token": jwt, "email": user.Email, "userGroupID": user.UserGroupID, "profilePicture": picture})
 }
 
 // getOrCreateGoogleUser checks if the user exists in the database, if not creates a new one.

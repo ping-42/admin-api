@@ -1,6 +1,6 @@
 module github.com/ping-42/admin-api
 
-go 1.22.6
+go 1.22.7
 
 require (
 	github.com/go-playground/validator/v10 v10.22.1
