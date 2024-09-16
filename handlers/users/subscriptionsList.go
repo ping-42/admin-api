@@ -17,7 +17,7 @@ type subscriptionResponse struct {
 	TestsCountExecuted     int           `json:"tests_count_executed"`
 	Period                 time.Duration `json:"period"`
 	Opts                   string        `json:"opts"`
-	IsActive               bool          `json:"is_active"`
+	Status                 string        `json:"status"`
 	LastExecutionCompleted time.Time     `json:"last_execution_completed"`
 }
 
@@ -39,6 +39,16 @@ func ServeSubscriptionsList(ctx iris.Context, db *gorm.DB, redisClient *redis.Cl
 
 	var subscriptionResponses []subscriptionResponse
 	for _, s := range subscriptions {
+
+		status := "Inactive"
+		if s.IsActive == true {
+			if s.TestsCountExecuted >= s.TestsCountSubscribed {
+				status = "Completed"
+			} else {
+				status = "Active"
+			}
+		}
+
 		subscriptionResponses = append(subscriptionResponses, subscriptionResponse{
 			ID:                     s.ID,
 			TaskTypeName:           s.TaskType.Type,
@@ -46,7 +56,7 @@ func ServeSubscriptionsList(ctx iris.Context, db *gorm.DB, redisClient *redis.Cl
 			TestsCountExecuted:     s.TestsCountExecuted,
 			Period:                 s.Period,
 			Opts:                   string(s.Opts),
-			IsActive:               s.IsActive,
+			Status:                 status,
 			LastExecutionCompleted: s.LastExecutionCompleted,
 		})
 	}
