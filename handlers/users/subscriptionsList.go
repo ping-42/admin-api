@@ -41,7 +41,7 @@ func ServeSubscriptionsList(ctx iris.Context, db *gorm.DB, redisClient *redis.Cl
 	for _, s := range subscriptions {
 
 		status := "Inactive"
-		if s.IsActive == true {
+		if s.IsActive {
 			if s.TestsCountExecuted >= s.TestsCountSubscribed {
 				status = "Completed"
 			} else {
