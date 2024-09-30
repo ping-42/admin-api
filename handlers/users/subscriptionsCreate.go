@@ -25,20 +25,20 @@ type SubscriptionReceived struct {
 
 type DnsOptsReceived struct {
 	Host  string `json:"host" validate:"required,fqdn"`
-	Proto string `json:"proto" validate:"required"`
+	Proto string `json:"proto" validate:"required,oneof=tcp udp"`
 }
 
 type IcmpOptsReceived struct {
 	Count        int      `json:"Count" validate:"required,min=1"`
 	Payload      string   `json:"Payload" validate:"required"`
 	TargetIPs    []string `json:"TargetIPs" validate:"dive,ip"`
-	TargetDomain string   `json:"TargetDomain,omitempty"`
+	TargetDomain string   `json:"TargetDomain" validate:"fqdn"`
 }
 
 type HttpOptsReceived struct {
-	HttpMethod     string              `json:"HttpMethod" validate:"required,oneof=GET POST PUT DELETE"`
-	RequestBody    string              `json:"RequestBody" validate:"required"`
-	TargetDomain   string              `json:"TargetDomain" validate:"required,url"`
+	HttpMethod     string              `json:"HttpMethod" validate:"required,oneof=GET POST PUT DELETE CONNECT OPTIONS TRACE PATCH HEAD"`
+	RequestBody    string              `json:"RequestBody"`
+	TargetDomain   string              `json:"URL" validate:"required,url"`
 	RequestHeaders map[string][]string `json:"RequestHeaders"`
 }
 
