@@ -91,7 +91,7 @@ ORDER BY
     last_12_months.month;
     `
 
-	if err := db.Raw(query, userClaims.UserId).Scan(&tasksCompleted).Error; err != nil {
+	if err := db.Raw(query, userClaims.OrganizationId).Debug().Scan(&tasksCompleted).Error; err != nil {
 		utils.RespondError(ctx, iris.StatusInternalServerError, "Failed to query active sensors", err)
 		return
 	}
