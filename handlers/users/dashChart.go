@@ -13,9 +13,10 @@ import (
 )
 
 type res struct {
-	Date     time.Time `gorm:"type:date"`
-	SensorID uuid.UUID
-	Count    int64
+	Date       time.Time `gorm:"type:date"`
+	SensorID   uuid.UUID
+	SensorName string
+	Count      int64
 }
 
 func ServeDashChartData(ctx iris.Context, db *gorm.DB) {
@@ -25,7 +26,7 @@ func ServeDashChartData(ctx iris.Context, db *gorm.DB) {
 		return
 	}
 
-	// Calculate the date 30 days ago
+	// calculate the date 30 days ago
 	thirtyDaysAgo := time.Now().AddDate(0, 0, -30)
 
 	// Construct the SQL query
@@ -33,14 +34,14 @@ func ServeDashChartData(ctx iris.Context, db *gorm.DB) {
 		WITH dates AS (
 			SELECT generate_series(?::date, ?::date, '1 day'::interval) as date
 		)
-		SELECT dates.date, COALESCE(tasks.sensor_id, ?) as sensor_id, COALESCE(COUNT(tasks.id), 0) as count
+		SELECT dates.date, COALESCE(tasks.sensor_id, ?) as sensor_id, COALESCE(COUNT(tasks.id), 0) as count, sensors.name as sensor_name
 		FROM dates
 		LEFT JOIN tasks ON tasks.created_at::date = dates.date
 		AND tasks.task_status_id = ?
 		LEFT JOIN sensors ON sensors.id = tasks.sensor_id
 		WHERE sensors.organization_id = ?
-		GROUP BY dates.date, tasks.sensor_id
-		ORDER BY dates.date, tasks.sensor_id
+		GROUP BY dates.date, tasks.sensor_id, sensor_name
+		ORDER BY dates.date
 	`
 
 	// Execute the raw SQL query
