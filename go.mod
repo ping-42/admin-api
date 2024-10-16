@@ -9,7 +9,7 @@ require (
 	github.com/jessevdk/go-flags v1.6.1
 	github.com/kataras/iris/v12 v12.2.11
 	github.com/ping-42/42lib v0.1.34
-	google.golang.org/api v0.200.0
+	google.golang.org/api v0.201.0
 	gorm.io/gorm v1.25.12
 )
 
