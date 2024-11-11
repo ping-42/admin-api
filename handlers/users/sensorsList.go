@@ -1,8 +1,8 @@
 package users
 
 import (
-	"slices"
-	"strings"
+	"encoding/json"
+	"fmt"
 
 	"github.com/go-redis/redis"
 	"github.com/google/uuid"
@@ -10,6 +10,7 @@ import (
 	"github.com/ping-42/42lib/constants"
 	"github.com/ping-42/42lib/db/models"
 	"github.com/ping-42/42lib/sensor"
+	"github.com/ping-42/42lib/wss"
 	"github.com/ping-42/admin-api/middleware"
 	"github.com/ping-42/admin-api/utils"
 	"gorm.io/gorm"
@@ -22,6 +23,7 @@ type sensorResponse struct {
 	Location       string    `json:"location"`
 	EnvToken       string    `json:"env_token"`
 	IsConnected    bool      `json:"is_connected"`
+	SensorVersion  string    `json:"sensor_version"`
 }
 
 func ServeSensorsList(ctx iris.Context, db *gorm.DB, redisClient *redis.Client) {
@@ -33,21 +35,28 @@ func ServeSensorsList(ctx iris.Context, db *gorm.DB, redisClient *redis.Client) 
 	}
 
 	//-----------------------
-	// TODO: here we are getting the connected/active sensors this needs to be refactored
-	var connectedSensorIDs []uuid.UUID
+	// TODO: here we are getting the connected/active sensors this needs to be moved to separate function
+	var connectedSensorsData = make(map[uuid.UUID]wss.SensorConnection)
 	connectedSensors, err := redisClient.Keys(constants.RedisActiveSensorsKeyPrefix + "*").Result()
 	if err != nil {
 		utils.RespondError(ctx, iris.StatusInternalServerError, "", err)
 		return
 	}
-	for k, v := range connectedSensors {
-		connectedSensors[k] = strings.TrimPrefix(v, constants.RedisActiveSensorsKeyPrefix)
-		sensorID, er := uuid.Parse(connectedSensors[k])
-		if er != nil {
-			utils.RespondError(ctx, iris.StatusInternalServerError, "", er)
+	for _, v := range connectedSensors {
+
+		value, err := redisClient.Get(v).Result()
+		if err != nil {
+			utils.RespondError(ctx, iris.StatusInternalServerError, "", err)
 			return
 		}
-		connectedSensorIDs = append(connectedSensorIDs, sensorID)
+
+		sensorConnection := wss.SensorConnection{}
+		err = json.Unmarshal([]byte(value), &sensorConnection)
+		if err != nil {
+			utils.RespondError(ctx, iris.StatusInternalServerError, "", fmt.Errorf("Unmarshal sensorConnection: %v", err))
+			return
+		}
+		connectedSensorsData[sensorConnection.SensorId] = sensorConnection
 	}
 	//-----------------------
 
@@ -72,7 +81,7 @@ func ServeSensorsList(ctx iris.Context, db *gorm.DB, redisClient *redis.Client) 
 			return
 		}
 
-		isConnected := slices.Contains(connectedSensorIDs, s.ID)
+		sensorConnection, isConnected := connectedSensorsData[s.ID]
 
 		sensorResponses = append(sensorResponses, sensorResponse{
 			ID:             s.ID,
@@ -81,6 +90,7 @@ func ServeSensorsList(ctx iris.Context, db *gorm.DB, redisClient *redis.Client) 
 			Location:       s.Location,
 			EnvToken:       envToken,
 			IsConnected:    isConnected,
+			SensorVersion:  sensorConnection.SensorVersion,
 		})
 	}
 
