@@ -26,7 +26,7 @@ var serverLogger = logger.Base("admin-api")
 // command-line options
 type Options struct {
 	Port     int    `short:"p" long:"port" description:"Port to listen on" default:"8081"`
-	CorsHost string `short:"c" long:"corshost" description:"CORS Origin host to allow" default:"http://localhost:8081"`
+	CorsHost string `short:"c" long:"corshost" description:"CORS Origin host to allow" default:"http://localhost:3000"`
 }
 
 func main() {

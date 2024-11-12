@@ -4,4 +4,4 @@ admin-api
 .vscode/
 vendor/
 dist/
-__debug_*.*
+__debug_**
