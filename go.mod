@@ -8,7 +8,7 @@ require (
 	github.com/iris-contrib/middleware/cors v0.0.0-20240926134003-a252b7a49da9
 	github.com/jessevdk/go-flags v1.6.1
 	github.com/kataras/iris/v12 v12.2.11
-	github.com/ping-42/42lib v0.1.41
+	github.com/ping-42/42lib v0.1.43
 	google.golang.org/api v0.214.0
 	gorm.io/gorm v1.25.12
 )
@@ -33,7 +33,7 @@ require (
 	github.com/holiman/uint256 v1.3.2 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20240606120523-5a60cdf6a761 // indirect
-	github.com/jackc/pgx/v5 v5.7.1 // indirect
+	github.com/jackc/pgx/v5 v5.7.2 // indirect
 	github.com/jackc/puddle/v2 v2.2.2 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
