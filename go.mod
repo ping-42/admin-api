@@ -1,7 +1,6 @@
 module github.com/ping-42/admin-api
 
 go 1.23
-
 require (
 	github.com/go-playground/validator/v10 v10.24.0
 	github.com/go-redis/redis v6.15.9+incompatible
@@ -57,7 +56,7 @@ require (
 	github.com/Shopify/goreferrer v0.0.0-20240724165105-aceaa0259138 // indirect
 	github.com/andybalholm/brotli v1.1.1 // indirect
 	github.com/aymerick/douceur v0.2.0 // indirect
-	github.com/ethereum/go-ethereum v1.14.13
+	github.com/ethereum/go-ethereum v1.15.3
 	github.com/fatih/structs v1.1.0 // indirect
 	github.com/flosch/pongo2/v4 v4.0.2 // indirect
 	github.com/golang-jwt/jwt/v5 v5.2.1
