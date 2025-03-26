@@ -9,13 +9,13 @@ require (
 	github.com/jessevdk/go-flags v1.6.1
 	github.com/kataras/iris/v12 v12.2.11
 	github.com/ping-42/42lib v0.1.45
-	google.golang.org/api v0.226.0
+	google.golang.org/api v0.228.0
 	gorm.io/gorm v1.25.12
 )
 
 require (
 	cloud.google.com/go/auth v0.15.0 // indirect
-	cloud.google.com/go/auth/oauth2adapt v0.2.7 // indirect
+	cloud.google.com/go/auth/oauth2adapt v0.2.8 // indirect
 	cloud.google.com/go/compute/metadata v0.6.0 // indirect
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.4.0 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
@@ -92,7 +92,7 @@ require (
 	golang.org/x/sys v0.31.0 // indirect
 	golang.org/x/text v0.23.0 // indirect
 	golang.org/x/time v0.11.0 // indirect
-	google.golang.org/protobuf v1.36.5 // indirect
+	google.golang.org/protobuf v1.36.6 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
