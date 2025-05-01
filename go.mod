@@ -10,7 +10,7 @@ require (
 	github.com/kataras/iris/v12 v12.2.11
 	github.com/ping-42/42lib v0.1.45
 	google.golang.org/api v0.226.0
-	gorm.io/gorm v1.25.12
+	gorm.io/gorm v1.26.0
 )
 
 require (
