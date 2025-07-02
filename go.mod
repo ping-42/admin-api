@@ -3,7 +3,7 @@ module github.com/ping-42/admin-api
 go 1.24
 
 require (
-	github.com/go-playground/validator/v10 v10.26.0
+	github.com/go-playground/validator/v10 v10.27.0
 	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/iris-contrib/middleware/cors v0.0.0-20250207234507-372f6828ef8c
 	github.com/jessevdk/go-flags v1.6.1
